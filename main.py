@@ -1,13 +1,23 @@
 import telebot
 from telebot import types
+from PIL import Image
+import io
+from decoder import stegano
 
 bot = telebot.TeleBot('7921804902:AAEte7WriDkKjmHAEB95utVGU61KmlBGxZQ')
 
 
-@bot.message_handler(content_types=['document', 'video', 'photo'])
-def handle_document(message):
-    bot.send_message(message.chat.id, f"{message.document.file_name.end} файлы не поддерживаются. "
-                                      f"Вы ошиблись разделом заданий )")
+#
+@bot.message_handler(content_types=['audio', 'photo', 'voice', 'video', 'document',
+                                    'location', 'contact', 'sticker'])
+def photo_handle(message):
+    if ".png" in message.document.file_name:
+        photo = message.document
+        file_info = bot.get_file(photo.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        bot.send_message(message.chat.id, stegano(Image.open(io.BytesIO(downloaded_file))))
+    else:
+        bot.send_message(message.chat.id, "Обработка данного типа данных не поддерживается сейчас.")
 
 
 @bot.message_handler(commands=["start"])
