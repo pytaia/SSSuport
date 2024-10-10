@@ -100,4 +100,27 @@ def ctf_task_category_info(message):
         start_place(message)
 
 
+@bot.message_handler(func=lambda message: message.text == 'О VRN-CTF')
+def vrn_ctf_info(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(types.KeyboardButton('Материалы для подготовки'), types.KeyboardButton('Дата, время, место проведения'),
+               types.KeyboardButton('Дают ли за победу разряд по ИБ?'), types.KeyboardButton('Назад'))
+
+    bot.send_message(message.chat.id, "VRN-CTF - Первенство города Воронежа по спортивному программированию и "
+                                      "компьютерной безопасности среди школьников и студентов.", reply_markup=markup)
+
+
+@bot.message_handler(func=lambda message: message.text in ['Материалы для подготовки', 'Дата, время, место проведения',
+                                                           'Дают ли за победу разряд по ИБ?', 'Назад'])
+def vrn_ctf_category_info(message):
+    if message.text == 'Материалы для подготовки':
+        bot.send_message(message.chat.id, "А эм, где то они были, надо поискать")
+    elif message.text == 'Дата, время, место проведения':
+        bot.send_message(message.chat.id, "В субботу весной")
+    elif message.text == 'Дают ли за победу разряд по ИБ?':
+        bot.send_message(message.chat.id, "Хехе Наивный чукотский школьник")
+    else:
+        start_place(message)
+
+
 bot.polling(none_stop=True, interval=0)
